@@ -40,12 +40,6 @@ const config = {
   //     }
   //   }
   // },
-	plugins: [
-		new MiniCssExtractPlugin({
-			filename: "[name].css",
-			chunkFilename: "[id].css"
-		})
-	],
 	module: {
 		rules: [
 			{
@@ -77,6 +71,12 @@ const config = {
 				]
 			}
 		]
-	}
+	},
+	plugins: [
+		new MiniCssExtractPlugin({
+			filename: "[name].css",
+			chunkFilename: "[id].css"
+		})
+	]
 }
 module.exports = config;
