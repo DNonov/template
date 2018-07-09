@@ -1,49 +1,54 @@
 import gulp from "gulp";
 import rimraf from "rimraf";
 import webpack from "webpack";
-import webpackStream from "webpack-stream"
 import browserSync from "browser-sync";
-import * as webpackConfig from "./webpack.config.js";
+import config from "./webpack.config.js";
 
 const pathsToWatch = [
-	"./src/scripts/**/*.js",
-	"./src/styles/**/*.less",
+	"./src/**/*",
 	"./index.html"
 ]
 
-const reload = browserSync.reload;
-
-
-gulp.task("build:clean", cb => {
-	rimraf("./build", () => cb());
+browserSync.init({
+	server: {
+		baseDir: "./"
+	}
 });
 
-gulp.task("build:compile", () => {
-	console.log("helooo");
-	// gulp.src("./src/**/*")
-	// 		.pipe(webpackStream(webpackConfig), webpack)
-			// .pipe(gulp.dest("./build"))
-});
+const log = (cb) => {console.log("gjlfs"); cb()}
+const clean = (cb) => {
+	rimraf("./build", err => {
+		console.log(err);
+	});
+	cb();
+}
 
-gulp.task("build:watch", () => {
+const watch = () => {
+	return gulp.watch(pathsToWatch, gulp.series(compile, reload))
+}
 
-		browserSync.init({
-			server: {
-				baseDir: "./"
-			}
-		});
+const reload = (cb) => {
+	browserSync.reload();
+	cb();
+}
 
-		gulp.watch("./build", () => {
-			browserSync.reload();
-		});
+const compile = (cb) => {
+	webpack(config, (err, stat) => {
+		if(err){
+			console.log(err);
+		}
+	});
+	cb();
+}
 
-		gulp.watch(pathsToWatch, function watchCompil(done) {
-			console.log("hello");
-			gulp.series(
-				"build:compile"
-			);
-			reload();
-			done();
-		})
+const inject = () => {
+	return gulp.src("./build/*")
+		.pipe(browserSync.stream());
+}
 
-});
+gulp.task(inject);
+gulp.task(clean);
+gulp.task(reload);
+gulp.task(compile);
+gulp.task(watch);
+gulp.task(log);
