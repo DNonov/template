@@ -8,10 +8,10 @@ function add(a, b) {
 }
 // console.log("horosan");
 // const compacted = _.compact([0,1,false,]);
-// console.log(compacted)
+// console.log(compacted
 
 
 const img = document.createElement("img");
 img.src= big;
-document.body.appendChild(img);
+document.body.appendChild(img); 
 module.exports = add;
